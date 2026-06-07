@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2CRSI — Refroidissement diphasique & Rubin | Analyse juin 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #11111a;
+    --bg3: #181825;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --green: #00d9a3;
+    --green-dim: rgba(0,217,163,0.12);
+    --amber: #f5a623;
+    --amber-dim: rgba(245,166,35,0.12);
+    --blue: #4fa3e0;
+    --blue-dim: rgba(79,163,224,0.12);
+    --red: #e05c5c;
+    --red-dim: rgba(224,92,92,0.12);
+    --muted: #6b7280;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* HEADER */
+  .hero {
+    border-bottom: 1px solid var(--border2);
+    padding: 56px 0 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%;
+    transform: translateX(-50%);
+    width: 700px; height: 300px;
+    background: radial-gradient(ellipse, rgba(0,217,163,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .container { max-width: 820px; margin: 0 auto; padding: 0 24px; }
+
+  .ticker-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: var(--mono); font-size: 11px; font-weight: 600;
+    color: var(--green);
+    border: 1px solid rgba(0,217,163,0.3);
+    background: var(--green-dim);
+    padding: 4px 12px; border-radius: 4px;
+    letter-spacing: 0.08em;
+    margin-bottom: 20px;
+  }
+  .ticker-badge::before {
+    content: ''; width: 6px; height: 6px;
+    background: var(--green); border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  .hero h1 {
+    font-size: 32px; font-weight: 600; line-height: 1.25;
+    margin-bottom: 12px; letter-spacing: -0.02em;
+  }
+  .hero h1 span { color: var(--green); }
+  .hero-sub {
+    font-size: 16px; color: var(--text2); margin-bottom: 28px;
+    max-width: 600px; line-height: 1.6;
+  }
+  .hero-meta {
+    display: flex; gap: 24px; flex-wrap: wrap;
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+  .hero-meta span { color: var(--text2); }
+
+  /* NAV */
+  .nav-strip {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav-inner {
+    max-width: 820px; margin: 0 auto; padding: 0 24px;
+    display: flex; gap: 0; overflow-x: auto;
+  }
+  .nav-inner a {
+    display: block;
+    font-family: var(--mono); font-size: 11px;
+    color: var(--muted); text-decoration: none;
+    padding: 14px 16px;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color 0.2s, border-color 0.2s;
+    letter-spacing: 0.05em;
+  }
+  .nav-inner a:hover { color: var(--text); border-bottom-color: var(--border2); }
+
+  /* SECTIONS */
+  .section { padding: 52px 0; border-bottom: 1px solid var(--border); }
+  .section:last-child { border-bottom: none; }
+
+  .section-label {
+    font-family: var(--mono); font-size: 10px; font-weight: 600;
+    color: var(--green); letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .section-title {
+    font-size: 22px; font-weight: 600; letter-spacing: -0.02em;
+    margin-bottom: 20px; line-height: 1.3;
+  }
+  .section-body {
+    color: var(--text2); line-height: 1.8; font-size: 14px;
+  }
+  .section-body p { margin-bottom: 12px; }
+  .section-body strong { color: var(--text); font-weight: 500; }
+
+  /* KPI GRID */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px; margin: 28px 0;
+  }
+  .kpi {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 16px;
+  }
+  .kpi-label {
+    font-family: var(--mono); font-size: 10px;
+    color: var(--muted); letter-spacing: 0.06em;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .kpi-value {
+    font-size: 26px; font-weight: 600;
+    letter-spacing: -0.02em; line-height: 1;
+    margin-bottom: 4px;
+  }
+  .kpi-sub { font-size: 12px; color: var(--muted); }
+  .kpi-value.green { color: var(--green); }
+  .kpi-value.amber { color: var(--amber); }
+  .kpi-value.blue { color: var(--blue); }
+
+  /* TABLE */
+  .table-wrap { overflow-x: auto; margin: 24px 0; }
+  table {
+    width: 100%; border-collapse: collapse;
+    font-size: 13px;
+  }
+  th {
+    text-align: left;
+    font-family: var(--mono); font-size: 10px; font-weight: 600;
+    color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border2);
+    background: var(--bg2);
+  }
+  td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2); vertical-align: top;
+    line-height: 1.55;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr.highlight td { background: rgba(0,217,163,0.04); }
+  tr.highlight td:first-child { border-left: 2px solid var(--green); }
+  td strong { color: var(--text); font-weight: 500; }
+  td .note { font-size: 11px; color: var(--muted); display: block; margin-top: 2px; }
+
+  /* BADGE */
+  .badge {
+    display: inline-block; font-size: 10px; font-weight: 600;
+    font-family: var(--mono); letter-spacing: 0.05em;
+    padding: 2px 8px; border-radius: 3px;
+  }
+  .badge-green { background: var(--green-dim); color: var(--green); }
+  .badge-amber { background: var(--amber-dim); color: var(--amber); }
+  .badge-red { background: var(--red-dim); color: var(--red); }
+  .badge-blue { background: var(--blue-dim); color: var(--blue); }
+
+  /* HIGHLIGHT BOX */
+  .callout {
+    border: 1px solid var(--border2);
+    border-left: 3px solid var(--green);
+    background: var(--bg2);
+    border-radius: 0 8px 8px 0;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 14px; color: var(--text2);
+    line-height: 1.7;
+  }
+  .callout strong { color: var(--text); }
+  .callout.amber { border-left-color: var(--amber); }
+  .callout.blue { border-left-color: var(--blue); }
+  .callout.red { border-left-color: var(--red); }
+
+  /* TWO-COL */
+  .two-col {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px; margin: 20px 0;
+  }
+  @media(max-width:600px){ .two-col { grid-template-columns: 1fr; } }
+
+  /* CARD */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-size: 13px; color: var(--text2);
+  }
+  .card h4 {
+    font-size: 13px; font-weight: 500; color: var(--text);
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card h4 .dot {
+    width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+  }
+  .card ul { list-style: none; }
+  .card ul li { padding: 4px 0; border-bottom: 1px solid var(--border); }
+  .card ul li:last-child { border-bottom: none; }
+
+  /* ROADMAP */
+  .roadmap { margin: 20px 0; }
+  .rm-row {
+    display: flex; gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .rm-row:last-child { border-bottom: none; }
+  .rm-date {
+    font-family: var(--mono); font-size: 10px; font-weight: 600;
+    color: var(--muted); min-width: 96px;
+    padding-top: 3px; letter-spacing: 0.05em;
+  }
+  .rm-content { color: var(--text2); flex: 1; }
+  .rm-content strong { color: var(--text); font-weight: 500; }
+  .rm-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    margin-top: 6px; flex-shrink: 0;
+    background: var(--border2);
+  }
+  .rm-dot.done { background: var(--green); }
+  .rm-dot.upcoming { background: var(--amber); }
+
+  /* FOOTER */
+  .footer {
+    padding: 32px 0;
+    border-top: 1px solid var(--border);
+    background: var(--bg2);
+  }
+  .footer-inner {
+    max-width: 820px; margin: 0 auto; padding: 0 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+  }
+  .footer-left { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .footer-left span { color: var(--text2); }
+  .disclaimer {
+    font-size: 11px; color: var(--muted);
+    border-top: 1px solid var(--border);
+    padding-top: 16px; margin-top: 16px;
+  }
+
+  /* DENSITY BAR */
+  .density-bar-wrap { margin: 20px 0; }
+  .density-row {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 10px; font-size: 13px;
+  }
+  .density-label { width: 160px; color: var(--text2); flex-shrink: 0; }
+  .density-track {
+    flex: 1; background: var(--bg3);
+    border-radius: 3px; height: 8px; overflow: hidden;
+  }
+  .density-fill {
+    height: 100%; border-radius: 3px;
+    background: var(--green);
+    transition: width 0.5s;
+  }
+  .density-val {
+    width: 70px; text-align: right;
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+  }
+
+  hr.section-hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="ticker-badge">2CRSI · FR0013341781 · Euronext Growth</div>
+    <h1>Refroidissement diphasique &amp; <span>Rubin</span><br>Pourquoi la physique force le choix</h1>
+    <p class="hero-sub">Analyse technique : comparatif des technologies de refroidissement, roadmap GPU NVIDIA, projet ÆTHER et positionnement de 2CRSI dans la chaîne de valeur IA.</p>
+    <div class="hero-meta">
+      PUBLIÉE LE &nbsp;<span>07 juin 2026</span>
+      &nbsp;·&nbsp; SOURCES &nbsp;<span>Communiqués 2CRSI · Chemours · DataCenter Dynamics · IDTechEx · GRC</span>
+      &nbsp;·&nbsp; <span>Analyse personnelle — pas un conseil d'investissement</span>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav-strip">
+  <div class="nav-inner">
+    <a href="#contexte">01 · Contexte</a>
+    <a href="#technos">02 · Comparatif techno</a>
+    <a href="#diphasique">03 · Diphasique</a>
+    <a href="#atlas">04 · Atlas 2PIC</a>
+    <a href="#rubin">05 · Roadmap Rubin</a>
+    <a href="#aether">06 · ÆTHER</a>
+    <a href="#risques">07 · Risques</a>
+    <a href="#synthese">08 · Synthèse</a>
+  </div>
+</nav>
+
+<!-- SECTION 1 — CONTEXTE -->
+<div class="section" id="contexte">
+  <div class="container">
+    <div class="section-label">01 · Contexte</div>
+    <h2 class="section-title">La densité thermique, nouveau goulot d'étranglement de l'IA</h2>
+
+    <div class="section-body">
+      <p>Les datacenters classiques ont été conçus pour des racks tournant à <strong>10–14 kW</strong>. Avec les GPU H100/H200, les racks IA exigent <strong>40–80 kW</strong>. Avec Blackwell B300, on dépasse <strong>100 kW</strong>. Avec Rubin Ultra (2027), NVIDIA prévoit des racks à <strong>600 kW</strong>. À ces niveaux, le problème n'est plus l'achat de GPU — c'est leur capacité à tourner à plein régime sans throttling thermique.</p>
+      <p>Le bottleneck s'est déplacé de la salle vers la machine elle-même. Refroidir efficacement au niveau du composant est devenu la condition d'un compute utile et rentable. C'est précisément là que 2CRSI s'est positionné depuis sa fondation.</p>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi-label">Rack IA classique</div>
+        <div class="kpi-value amber">10–14 kW</div>
+        <div class="kpi-sub">norme historique hyperscale</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Rack Blackwell B300</div>
+        <div class="kpi-value amber">&gt; 100 kW</div>
+        <div class="kpi-sub">TDP jusqu'à 1 400 W/GPU</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Rack Rubin Ultra (2027)</div>
+        <div class="kpi-value red">600 kW</div>
+        <div class="kpi-sub">576 GPU dies · "Kyber Rack"</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Cible 2CRSI dès 2026</div>
+        <div class="kpi-value green">&gt; 130 kW</div>
+        <div class="kpi-sub">compatibles Vera Rubin / ÆTHER</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Principe clé :</strong> la chaleur naît sur le chip. Toute solution qui intervient après coup (climatisation salle, refroidissement arrière de rack) compense sans résoudre. L'efficacité maximale exige d'extraire la chaleur au plus près de sa source — c'est l'approche co-design que 2CRSI a intégrée dès la conception de ses châssis.
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2 — COMPARATIF -->
+<div class="section" id="technos">
+  <div class="container">
+    <div class="section-label">02 · Comparatif technologique</div>
+    <h2 class="section-title">Les quatre régimes de refroidissement</h2>
+
+    <div class="section-body">
+      <p>Chaque technologie répond à une plage de densité de puissance. Le tableau ci-dessous synthétise les données issues de sources industrielles vérifiées (GRC, IDTechEx, rapports opérateurs).</p>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Technologie</th>
+            <th>Densité max rack</th>
+            <th>PUE typique</th>
+            <th>Éco. énergie vs air</th>
+            <th>Capex infra</th>
+            <th>Opex / entretien</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Air cooling</strong><br><span class="note">référence baseline</span></td>
+            <td>~20–30 kW</td>
+            <td>1,40–1,60</td>
+            <td><span class="badge badge-red">référence 0%</span></td>
+            <td>Faible<br><span class="note">infra existante réutilisable</span></td>
+            <td>Élevé : chillers, ventilateurs, sur-dimensionnement obligatoire</td>
+          </tr>
+          <tr>
+            <td><strong>DLC — Direct Liquid Cooling</strong><br><span class="note">cold plates sur CPU/GPU</span></td>
+            <td>~60–80 kW</td>
+            <td>1,15–1,20</td>
+            <td><span class="badge badge-amber">–45 à –80%</span></td>
+            <td>Moyen<br><span class="note">6 000–9 500 $/kW · retrofit possible</span></td>
+            <td>Modéré : CDU, connecteurs rapides, pompes, résiduel air partiel</td>
+          </tr>
+          <tr>
+            <td><strong>Immersion monophasique</strong><br><span class="note">bain diélectrique, pompe active</span></td>
+            <td>~80–100 kW</td>
+            <td>1,03–1,05</td>
+            <td><span class="badge badge-green">–40 à –90%</span></td>
+            <td>Élevé<br><span class="note">30 000–50 000 $/rack · tank + CDU</span></td>
+            <td>Faible : –40% Opex vs air, pompes requises, risque "oil bloom" à surveiller</td>
+          </tr>
+          <tr class="highlight">
+            <td>
+              <strong>Immersion diphasique</strong><br>
+              <span class="note">changement de phase, sans pompe boucle primaire</span><br>
+              <span class="badge badge-green">2CRSI — Atlas 2PIC</span>
+            </td>
+            <td>&gt; 120 kW<br><span class="note">vers 600 kW/rack (Rubin Ultra)</span></td>
+            <td>1,02–1,03</td>
+            <td><span class="badge badge-green">jusqu'à –90%</span></td>
+            <td>Le plus élevé<br><span class="note">fluide 100–300 $/L · tank 50 000 $+ · conception étanche</span></td>
+            <td>Le plus bas : pas de pompe boucle primaire, durée vie composants ×1,3–1,5, perte fluide 1–2%/an si bien conçu</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-label" style="margin-top:28px; margin-bottom:12px;">Densité de flux thermique supportée (W/cm²)</div>
+    <div class="density-bar-wrap">
+      <div class="density-row">
+        <div class="density-label">Air cooling</div>
+        <div class="density-track"><div class="density-fill" style="width:2%; background:var(--muted);"></div></div>
+        <div class="density-val" style="color:var(--muted)">~1 W/cm²</div>
+      </div>
+      <div class="density-row">
+        <div class="density-label">DLC (cold plate)</div>
+        <div class="density-track"><div class="density-fill" style="width:20%; background:var(--amber);"></div></div>
+        <div class="density-val" style="color:var(--amber)">~150 W/cm²</div>
+      </div>
+      <div class="density-row">
+        <div class="density-label">Immersion monophasique</div>
+        <div class="density-track"><div class="density-fill" style="width:35%; background:var(--blue);"></div></div>
+        <div class="density-val" style="color:var(--blue)">~250 W/cm²</div>
+      </div>
+      <div class="density-row">
+        <div class="density-label" style="color:var(--green)"><strong>Immersion diphasique</strong></div>
+        <div class="density-track"><div class="density-fill" style="width:100%; background:var(--green);"></div></div>
+        <div class="density-val" style="color:var(--green)">~1 500 W/cm²</div>
+      </div>
+    </div>
+    <p style="font-size:12px; color:var(--muted); margin-top:4px;">Sources : Tom's Hardware datacenter cooling state of play 2025, IDTechEx 2026-2036 report.</p>
+
+    <div class="callout" style="margin-top:24px;">
+      <strong>TCO diphasique :</strong> malgré un capex initial plus élevé, le retour sur investissement constaté est de <strong>2,2 ans en moyenne</strong> (cas GRC). 1 MW de charge IT économise environ <strong>499 000 $/an</strong> à 0,10 $/kWh. La durée de vie des équipements passe de 3 à <strong>4–5 ans</strong> (absence de vibrations mécaniques, température stable au point d'ébullition du fluide).
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3 — DIPHASIQUE -->
+<div class="section" id="diphasique">
+  <div class="container">
+    <div class="section-label">03 · Refroidissement diphasique</div>
+    <h2 class="section-title">Le principe thermosiphon — pourquoi "sans pompe" change tout</h2>
+
+    <div class="section-body">
+      <p>Dans un système monophasique, le liquide reste liquide en permanence. Une pompe doit le faire circuler activement vers le condenseur : c'est une pièce mécanique mobile, point de défaillance potentiel, consommatrice d'énergie.</p>
+      <p>Dans un système <strong>diphasique</strong>, le fluide fluorocarbone a un bas point d'ébullition. La chaleur des composants le fait bouillir naturellement. La vapeur monte par convection vers le condenseur en haut du tank étanche. Elle se recondense en liquide et retombe par gravité. <strong>La thermodynamique elle-même fait circuler le fluide</strong> — c'est le principe du thermosiphon. Il n'y a pas de pompe sur la boucle primaire.</p>
+    </div>
+
+    <div class="two-col" style="margin-top:24px;">
+      <div class="card">
+        <h4><span class="dot" style="background:var(--green)"></span>Avantages techniques</h4>
+        <ul>
+          <li>Aucune pompe boucle primaire → moins de pannes</li>
+          <li>Température constante au point d'ébullition → zéro variation thermique sur les composants</li>
+          <li>Flux thermique jusqu'à ~1 500 W/cm² supporté</li>
+          <li>Silence opérationnel (pas de ventilateurs)</li>
+          <li>PUE quasi unitaire (~1,02–1,03)</li>
+          <li>Densité jusqu'à 8 GPU en format 1U</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><span class="dot" style="background:var(--amber)"></span>Contraintes à maîtriser</h4>
+        <ul>
+          <li>Fluide fluorocarbone : 100–300 $/L, manipulation prudente requise</li>
+          <li>Perte fluide par évaporation : 1–2%/an si système bien conçu, plus si mal conçu</li>
+          <li>Tanks étanches : conception complexe, coût élevé (&gt;50 000 $)</li>
+          <li>Pression interne : systèmes de sécurité obligatoires</li>
+          <li>Micro-cavitation potentielle si conception insuffisante</li>
+          <li>Infrastructure cliente à adapter (incompatible avec une installation air existante)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout amber" style="margin-top:20px;">
+      <strong>Le deal Chemours (février 2026) :</strong> 2CRSI et Chemours ont signé un accord de développement conjoint (ADC) après qualification réussie du fluide <strong>Opteon™ 2P50</strong> sur les gammes Atlantis et OCtoPus de 2CRSI. L'accord vise des serveurs 1U à <strong>15 kW</strong> intégrant des GPU NVIDIA nouvelle génération. Objectif : réduire le coût du fluide, minimiser les pertes par évaporation et pérenniser les infrastructures clientes. L'expertise de Chemours sur les fluorocarboones (fluide qualifié également par Samsung Electronics en août 2025) réduit directement le principal frein à l'adoption rapide du diphasique.
+    </div>
+
+    <div class="callout blue" style="margin-top:12px;">
+      <strong>11 ans d'expérience native :</strong> 2CRSI revendique 11 ans de fabrication de serveurs <em>conçus pour</em> l'immersion diphasique — pas des serveurs air adaptés après coup. Cette distinction est technique et importante : la conception mécanique, le choix des matériaux (joints, TIM, revêtements), le câblage interne et la gestion des pressions sont pensés dès le départ pour le milieu diphasique. Ce savoir industriel accumulé n'est pas reproductible en quelques mois.
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4 — ATLAS -->
+<div class="section" id="atlas">
+  <div class="container">
+    <div class="section-label">04 · Produit commercial</div>
+    <h2 class="section-title">Atlas 1.8GG 2PIC — vendu depuis octobre 2024</h2>
+
+    <div class="section-body">
+      <p>Il ne s'agit pas d'un prototype. Le serveur est commercialisé, avec une première série livrée en octobre 2024 et une production continue depuis novembre 2024. La version H200 (8 GPU en 1U) est disponible à la vente sur le site 2CRSI.</p>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi-label">Format</div>
+        <div class="kpi-value green" style="font-size:20px">1U</div>
+        <div class="kpi-sub">premier au monde en 1U</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">GPU supportés</div>
+        <div class="kpi-value green">8</div>
+        <div class="kpi-sub">NVIDIA H200 / H100 / AMD MI300</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Technologie</div>
+        <div class="kpi-value" style="font-size:16px; color:var(--blue)">2-phase</div>
+        <div class="kpi-sub">fluide Opteon™ Chemours</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Statut commercial</div>
+        <div class="kpi-value green" style="font-size:16px">Actif</div>
+        <div class="kpi-sub">depuis oct. 2024</div>
+      </div>
+    </div>
+
+    <div class="table-wrap" style="margin-top:24px;">
+      <table>
+        <thead>
+          <tr>
+            <th>Gamme 2CRSI</th>
+            <th>Technologie cooling</th>
+            <th>GPU max</th>
+            <th>Densité rack</th>
+            <th>Rôle commercial</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>OCtoPus (air)</strong></td>
+            <td>Air cooling optimisé</td>
+            <td>Standard</td>
+            <td>~20–30 kW</td>
+            <td>Entrée de gamme, clients existants</td>
+          </tr>
+          <tr>
+            <td><strong>Godì 1.8</strong></td>
+            <td>DLC — Direct liquid</td>
+            <td>8 GPU NV H200</td>
+            <td>40–80 kW</td>
+            <td><span class="badge badge-green">Volume principal aujourd'hui</span> — moteur du +880% S1 2025/26</td>
+          </tr>
+          <tr>
+            <td><strong>Atlas 1.8GG 1PIC</strong></td>
+            <td>Immersion monophasique</td>
+            <td>8 GPU NV H200</td>
+            <td>80–100 kW</td>
+            <td>Transition vers haute densité</td>
+          </tr>
+          <tr class="highlight">
+            <td><strong>Atlas 1.8GG 2PIC</strong></td>
+            <td>Immersion diphasique</td>
+            <td>8 GPU NV H200</td>
+            <td>&gt; 120 kW</td>
+            <td><span class="badge badge-green">Niche ultra-dense · premium · Rubin-ready</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout" style="margin-top:20px;">
+      <strong>Clients référencés :</strong> le secteur défense est cité explicitement (simulations de vol pour <strong>Dassault Aviation</strong>). Les clients datacenters IA aux États-Unis sont présents (contrats Californie 290 M€, Japon 140 M€ au carnet de commandes). La gamme Atlas 2PIC cible également les sites souverains, la télécom (edge 5G/6G) et le HPC académique — marchés où l'efficacité énergétique est un critère de premier plan et non de second ordre.
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5 — RUBIN -->
+<div class="section" id="rubin">
+  <div class="container">
+    <div class="section-label">05 · Roadmap NVIDIA</div>
+    <h2 class="section-title">Rubin R100 &amp; Rubin Ultra — la densité qui rend le diphasique obligatoire</h2>
+
+    <div class="section-body">
+      <p>Chaque génération NVIDIA augmente la densité thermique par GPU. La progression est mécanique et documentée. Le diphasique n'est pas un choix esthétique — c'est une nécessité physique à partir d'un certain seuil de TDP.</p>
+    </div>
+
+    <div class="table-wrap" style="margin-top:20px;">
+      <table>
+        <thead>
+          <tr>
+            <th>Génération</th>
+            <th>Architecture</th>
+            <th>TDP/GPU</th>
+            <th>Mémoire HBM</th>
+            <th>Bande passante</th>
+            <th>Cooling requis</th>
+            <th>Dispo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>H100</strong></td>
+            <td>Hopper</td>
+            <td>700 W</td>
+            <td>80 Go HBM2e</td>
+            <td>3,35 TB/s</td>
+            <td>DLC suffisant</td>
+            <td><span class="badge badge-green">Dispo</span></td>
+          </tr>
+          <tr>
+            <td><strong>H200</strong></td>
+            <td>Hopper Ultra</td>
+            <td>~1 000 W</td>
+            <td>141 Go HBM3e</td>
+            <td>4,8 TB/s</td>
+            <td>DLC limite haute</td>
+            <td><span class="badge badge-green">Dispo</span></td>
+          </tr>
+          <tr>
+            <td><strong>B200</strong></td>
+            <td>Blackwell</td>
+            <td>~1 000–1 200 W</td>
+            <td>192 Go HBM3e</td>
+            <td>8 TB/s</td>
+            <td><span class="badge badge-amber">Liquid obligatoire</span></td>
+            <td><span class="badge badge-green">Dispo</span> <span class="note">3,6M unités backlog</span></td>
+          </tr>
+          <tr>
+            <td><strong>B300</strong></td>
+            <td>Blackwell Ultra</td>
+            <td>~1 400 W</td>
+            <td>288 Go HBM3e</td>
+            <td>8 TB/s</td>
+            <td><span class="badge badge-amber">Liquid obligatoire</span></td>
+            <td><span class="badge badge-green">Dispo depuis H2 2025</span></td>
+          </tr>
+          <tr class="highlight">
+            <td><strong>R100</strong></td>
+            <td>Vera Rubin</td>
+            <td>&gt; 1 400 W (en hausse)</td>
+            <td>288 Go HBM4</td>
+            <td>22 TB/s</td>
+            <td><span class="badge badge-green">Diphasique idéal</span></td>
+            <td><span class="badge badge-amber">Sampling Q4 2026<br>Vol. Q1 2027</span></td>
+          </tr>
+          <tr class="highlight">
+            <td><strong>Rubin Ultra</strong></td>
+            <td>Vera Rubin Ultra</td>
+            <td>TDP très élevé</td>
+            <td>1 To HBM4e/GPU</td>
+            <td>&gt; 22 TB/s</td>
+            <td><span class="badge badge-green">Diphasique requis</span></td>
+            <td><span class="badge badge-red">H2 2027 · rack 600 kW</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout" style="margin-top:20px;">
+      <strong>Le chiffre qui change tout :</strong> le rack <em>Rubin Ultra NVL576</em> ("Kyber Rack") consommera <strong>600 kW</strong> — confirmé par Jensen Huang à GTC 2026. Le premier rack Vera Rubin R100 tourne déjà chez Microsoft Azure. La bande passante mémoire passe de 4,8 TB/s (H200) à <strong>22 TB/s</strong> (R100), soit un bond de ×4,6 en deux générations. À 600 kW, le refroidissement diphasique n'est plus une option premium — c'est la seule solution physiquement viable à grande échelle.
+    </div>
+
+    <div class="callout blue" style="margin-top:12px;">
+      <strong>Implication directe pour 2CRSI :</strong> le communiqué ÆTHER spécifie explicitement que le site est "compatible avec les prochaines générations de processeurs et GPU de pointe, notamment les futures générations <strong>NVIDIA Vera Rubin</strong> ou AMD Instinct". 2CRSI anticipe donc la transition Rubin dans son infrastructure cible, pas seulement dans son catalogue serveurs.
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 6 — AETHER -->
+<div class="section" id="aether">
+  <div class="container">
+    <div class="section-label">06 · Projet ÆTHER Infrastructure</div>
+    <h2 class="section-title">AI Gigafactory souveraine — Grand Est, empreinte carbone négative</h2>
+
+    <div class="section-body">
+      <p>Le 18 février 2026, 2CRSI a annoncé l'ouverture d'une <strong>négociation exclusive</strong> pour l'implantation d'un site industriel stratégique dans la région Grand Est, en tant qu'initiateur industriel et coordinateur technique du consortium <strong>ÆTHER Infrastructure</strong>.</p>
+    </div>
+
+    <div class="kpi-grid" style="margin: 24px 0;">
+      <div class="kpi">
+        <div class="kpi-label">Capacité phase 1</div>
+        <div class="kpi-value amber">40 MW</div>
+        <div class="kpi-sub">extensible à 300 MW</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Équivalent GPU</div>
+        <div class="kpi-value green">200 000</div>
+        <div class="kpi-sub">NVIDIA H100 équivalents</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Densité rack cible</div>
+        <div class="kpi-value green">&gt; 130 kW</div>
+        <div class="kpi-sub">dès 2026</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Bilan carbone</div>
+        <div class="kpi-value green" style="font-size:16px">Négatif</div>
+        <div class="kpi-sub">renouvelable + charbon végétal + CCS</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="card">
+        <h4><span class="dot" style="background:var(--green)"></span>Caractéristiques techniques</h4>
+        <ul>
+          <li>Serveurs haute densité &gt;130 kW/baie avec refroidissement liquide</li>
+          <li>Compatible GPU NVIDIA Vera Rubin et AMD Instinct nouvelle génération</li>
+          <li>Accès "bare metal" aux acteurs souverains européens</li>
+          <li>Localisation Grand Est (accès frontières DE, LU, BE, CH)</li>
+          <li>Réseau paneuropéen prévu (Allemagne, Luxembourg)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><span class="dot" style="background:var(--blue)"></span>Acteurs souverains ciblés</h4>
+        <ul>
+          <li>SiPearl — CPU européen (Grace Hopper compatible)</li>
+          <li>Axelera — puces IA edge européennes</li>
+          <li>Vsora — DSP IA</li>
+          <li>Vates et autres acteurs innovants EU</li>
+          <li>Programme InvestAI (UE) — 20 Md€ public/privé</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:20px;">
+      <strong>Structure financière neutre pour le bilan :</strong> le financement et le développement immobilier sont portés par une structure dédiée hors bilan. <strong>Aucune augmentation de capital n'est prévue</strong>. 2CRSI intervient comme coordinateur technique et initiateur industriel — le risque capex n'est pas sur son propre bilan. Le projet était parmi 76 candidats à l'appel à manifestation d'intérêt européen pour les AI Gigafactories (programme InvestAI).
+    </div>
+
+    <div class="callout amber" style="margin-top:12px;">
+      <strong>Points d'attention :</strong> au stade de février 2026, il s'agit d'une <em>négociation exclusive</em> — pas d'un contrat signé. Le projet reste soumis à des audits techniques, à des vérifications avec RTE sur la capacité de raccordement électrique, et aux autorisations réglementaires. La localisation précise n'est pas rendue publique. Il convient de distinguer les projets annoncés des revenus effectivement comptabilisés.
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 7 — RISQUES -->
+<div class="section" id="risques">
+  <div class="container">
+    <div class="section-label">07 · Risques &amp; concurrence</div>
+    <h2 class="section-title">Ce qui peut bien et mal se passer</h2>
+
+    <div class="two-col" style="margin-top:20px;">
+      <div class="card">
+        <h4><span class="dot" style="background:var(--green)"></span>Avantages structurels</h4>
+        <ul>
+          <li>Premier fabricant mondial 8 GPU en 1U diphasique</li>
+          <li>11 ans d'expérience immersion conçue nativement</li>
+          <li>Deal Chemours — fluide qualifié Opteon™ 2P50</li>
+          <li>Co-design thermique + compute dès la conception</li>
+          <li>Économie d'énergie jusqu'à –90% vs air : argument décisif</li>
+          <li>Souveraineté EU : fournisseur local qualifiable pour HPC/IA publique</li>
+          <li>Plateforme OCP (ORV3) — compatibilité ecosystem ouvert</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><span class="dot" style="background:var(--red)"></span>Risques d'exécution</h4>
+        <ul>
+          <li>Industrialisation : chaque commande volume peut devenir une succession de builds semi-custom</li>
+          <li>Incident qualité Q2 2024 : remise commerciale accordée à un client US pour retard de livraison — illustre le risque réel</li>
+          <li>Marges sous pression malgré CA en forte hausse (EBITDA 5,6 M€ vs 6,4 M€ l'année précédente)</li>
+          <li>Perte fluide diphasique si maîtrise insuffisante → TCO dégradé</li>
+          <li>ÆTHER : projet en négociation exclusive, pas encore contractualisé</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="section-hr" style="margin: 24px 0;">
+
+    <div class="section-label" style="margin-bottom:12px;">Carte concurrentielle</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Acteur</th>
+            <th>Positionnement</th>
+            <th>Rapport à 2CRSI</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Quanta / Foxconn / Wistron</strong><br><span class="note">ODM taïwanais</span></td>
+            <td>Volume hyperscale, supply chain massive, DLC dominant</td>
+            <td><span class="badge badge-red">Plafond concurrentiel</span> — sur les très grands volumes standardisés</td>
+          </tr>
+          <tr>
+            <td><strong>Supermicro</strong></td>
+            <td>Intégrateur rapide, catalogue large, DLC et immersion</td>
+            <td><span class="badge badge-amber">Concurrent direct</span> — niche dense, mais moins natif diphasique</td>
+          </tr>
+          <tr>
+            <td><strong>HPE / Dell / Lenovo</strong></td>
+            <td>Enterprise, canaux établis, support contrats</td>
+            <td><span class="badge badge-amber">Concurrent indirect</span> — moins agiles sur diphasique haute densité</td>
+          </tr>
+          <tr>
+            <td><strong>LiquidStack / Submer / GRC</strong></td>
+            <td>Fournisseurs de tanks d'immersion</td>
+            <td><span class="badge badge-blue">Partenaires / écosystème</span> — 2CRSI fait le serveur, eux le tank</td>
+          </tr>
+          <tr class="highlight">
+            <td><strong>2CRSI</strong></td>
+            <td>Co-design serveur + thermique, diphasique natif, souveraineté EU</td>
+            <td><span class="badge badge-green">Niche haute densité + Europe</span> — zone où les ODM ne sont pas</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 8 — SYNTHÈSE -->
+<div class="section" id="synthese">
+  <div class="container">
+    <div class="section-label">08 · Synthèse</div>
+    <h2 class="section-title">La mécanique est simple — l'exécution est le seul vrai sujet</h2>
+
+    <div class="section-body">
+      <p>La thèse n'est pas spéculative. Elle est mécanique :</p>
+      <p><strong>Les GPU génèrent plus de chaleur à chaque génération</strong> → le DLC atteint ses limites thermiques avec les GPU B300 et sera dépassé avec Rubin → l'immersion diphasique devient la seule solution physiquement viable pour les hautes densités → 2CRSI est le seul acteur européen côté à avoir industrialisé cette approche depuis 11 ans avec un produit commercial existant (Atlas 1.8GG 2PIC) et un partenaire fluide qualifié (Chemours Opteon™ 2P50).</p>
+      <p>Le projet ÆTHER ajoute une dimension infrastructure : si 2CRSI réussit à devenir coordinateur technique de la première AI Gigafactory souveraine européenne à empreinte carbone négative, le modèle économique passe de "vente de serveurs" à "opérateur de capacité de compute dense" — avec des revenus récurrents et une stickiness structurelle.</p>
+    </div>
+
+    <div class="section-label" style="margin-top:28px; margin-bottom:12px;">Roadmap catalyseurs</div>
+    <div class="roadmap">
+      <div class="rm-row">
+        <div class="rm-dot done"></div>
+        <div class="rm-date">Oct. 2024</div>
+        <div class="rm-content"><strong>Atlas 1.8GG 2PIC lancé</strong> — premier serveur mondial 8×H200 diphasique en 1U. Premières ventes commerciales confirmées.</div>
+      </div>
+      <div class="rm-row">
+        <div class="rm-dot done"></div>
+        <div class="rm-date">Fév. 2026</div>
+        <div class="rm-content"><strong>Deal Chemours</strong> (Opteon™ 2P50 qualifié) + <strong>ÆTHER</strong> : négociation exclusive pour AI Gigafactory Grand Est, 40 MW → 300 MW, densité &gt;130 kW/baie, hors bilan 2CRSI.</div>
+      </div>
+      <div class="rm-row">
+        <div class="rm-dot done"></div>
+        <div class="rm-date">S1 2025/26</div>
+        <div class="rm-content"><strong>CA &gt;200 M€ sur 6 mois</strong> (+880% vs S1 précédent). Objectif FY 2026/27 relevé à 500 M€. Carnet visible : contrats Californie (290 M€) et Japon (140 M€).</div>
+      </div>
+      <div class="rm-row">
+        <div class="rm-dot upcoming"></div>
+        <div class="rm-date">H2 2026</div>
+        <div class="rm-content"><strong>Premières livraisons Vera Rubin R100</strong> chez hyperscalers (AWS, Azure, GCP). Densité thermique ++. Pression accrue sur les solutions de refroidissement. Déploiement ÆTHER phase 1.</div>
+      </div>
+      <div class="rm-row">
+        <div class="rm-dot upcoming"></div>
+        <div class="rm-date">Q1 2027</div>
+        <div class="rm-content"><strong>Production volume Rubin R100</strong>. Objectif serveurs 1U 15 kW avec Chemours. Bascule potentielle du marché IA vers diphasique comme standard haute densité.</div>
+      </div>
+      <div class="rm-row">
+        <div class="rm-dot upcoming"></div>
+        <div class="rm-date">H2 2027</div>
+        <div class="rm-content"><strong>Rubin Ultra NVL576</strong> — rack "Kyber" à <strong>600 kW</strong>. Seul le diphasique (ou ses successeurs directs) peut gérer ces densités à l'échelle industrielle.</div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:28px;">
+      <strong>Signal de re-rating à surveiller :</strong> une croissance du CA sans compression de la marge brute, combinée à des clients qui commandent la même configuration de façon répétée. Ces deux conditions signalent que 2CRSI a réussi sa transition d'"assembleur projet" à "plateforme de déploiement". Ce n'est pas le cas encore de façon systématique — c'est le risque et le catalyseur simultanément.
+    </div>
+
+    <div class="callout red" style="margin-top:12px;">
+      <strong>À ne pas confondre :</strong> la gamme Godì (DLC) est le moteur de volume aujourd'hui (+880%). L'Atlas 2PIC est le produit premium stratégique pour demain. 2CRSI vend les deux — le diphasique ne remplace pas immédiatement le DLC, il capte le segment où la densité rend le DLC insuffisant. Rubin accélère cette migration.
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-left">
+      <div>2CRSI · <span>FR0013341781</span> · Euronext Growth Paris</div>
+      <div style="margin-top:4px;">Analyse publiée le <span>07 juin 2026</span></div>
+      <div class="disclaimer">
+        Analyse personnelle à titre informatif uniquement. Ne constitue pas un conseil d'investissement.<br>
+        Sources vérifiées : communiqués officiels 2CRSI, Chemours, DataCenter Dynamics, IDTechEx, Tom's Hardware, GRC, Zonebourse.
+      </div>
+    </div>
+    <div style="font-family:var(--mono); font-size:10px; color:var(--muted); text-align:right;">
+      <div>ISIN FR0013341781</div>
+      <div style="margin-top:4px;">CA FY 2024/25 : 220,7 M€</div>
+      <div style="margin-top:4px;">Objectif FY 2026/27 : 500 M€</div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
