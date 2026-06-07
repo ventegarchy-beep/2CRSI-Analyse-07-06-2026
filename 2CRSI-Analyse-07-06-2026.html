@@ -268,6 +268,28 @@
   .rm-body { flex:1; font-size:14px; color:var(--t2); line-height:1.65; }
   .rm-body strong { color:var(--t1); font-weight:600; }
 
+  /* ── GPU / GAMME CARDS ── */
+  .gpu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+    margin: 28px 0;
+  }
+  .gpu-card {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .gpu-card-hl {
+    border-color: rgba(0,229,168,0.35);
+    background: rgba(0,229,168,0.04);
+  }
+  .gpu-header { display: flex; flex-direction: column; gap: 4px; }
+  .gpu-name { font-size: 18px; font-weight: 700; color: var(--t1); }
+  .gpu-arch { font-size: 12px; color: var(--t3); margin-bottom: 4px; }
+
   /* ── TECHNO CARDS (remplace tableau 6 colonnes) ── */
   .techno-grid {
     display: grid;
@@ -596,48 +618,63 @@
     </div>
   </div>
 
-  <div class="tbl-wrap" style="margin-top:32px;">
-    <table>
-      <thead>
-        <tr>
-          <th>Gamme 2CRSI</th>
-          <th>Cooling</th>
-          <th>GPU max</th>
-          <th>Densité rack</th>
-          <th>Rôle commercial actuel</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>OCtoPus</strong><span class="sub">air cooling optimisé</span></td>
-          <td>Air</td>
-          <td>Standard</td>
-          <td>~20–30 kW</td>
-          <td>Entrée de gamme, renouvellement clients</td>
-        </tr>
-        <tr>
-          <td><strong>Godì 1.8</strong><span class="sub">DLC direct liquid</span></td>
-          <td>DLC</td>
-          <td>8 × NV H200</td>
-          <td>40–80 kW</td>
-          <td><span class="tag tg">Volume principal aujourd'hui</span><span class="sub">moteur du +880 % S1 2025/26</span></td>
-        </tr>
-        <tr>
-          <td><strong>Atlas 1.8GG 1PIC</strong><span class="sub">immersion monophasique</span></td>
-          <td>1-Phase</td>
-          <td>8 × NV H200</td>
-          <td>80–100 kW</td>
-          <td>Transition haute densité</td>
-        </tr>
-        <tr class="hl">
-          <td><strong>Atlas 1.8GG 2PIC</strong><span class="sub">immersion diphasique</span></td>
-          <td><span class="tag tg">2-Phase</span></td>
-          <td>8 × NV H200</td>
-          <td>&gt; 120 kW</td>
-          <td><span class="tag tg">Niche ultra-dense · premium · Rubin-ready</span></td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="gpu-grid">
+
+    <div class="gpu-card">
+      <div class="gpu-header">
+        <div class="gpu-name">OCtoPus</div>
+        <div class="gpu-arch">Air cooling optimisé</div>
+        <span class="tag tb">Entrée gamme</span>
+      </div>
+      <div class="techno-stats">
+        <div class="ts-row"><span class="ts-lbl">Cooling</span><span class="ts-val">Air</span></div>
+        <div class="ts-row"><span class="ts-lbl">GPU max</span><span class="ts-val">Standard</span></div>
+        <div class="ts-row"><span class="ts-lbl">Densité rack</span><span class="ts-val">~20–30 kW</span></div>
+      </div>
+      <div class="techno-detail">Renouvellement clients existants.</div>
+    </div>
+
+    <div class="gpu-card">
+      <div class="gpu-header">
+        <div class="gpu-name">Godì 1.8</div>
+        <div class="gpu-arch">DLC — Direct Liquid Cooling</div>
+        <span class="tag tg">Volume principal aujourd'hui</span>
+      </div>
+      <div class="techno-stats">
+        <div class="ts-row"><span class="ts-lbl">Cooling</span><span class="ts-val">DLC</span></div>
+        <div class="ts-row"><span class="ts-lbl">GPU max</span><span class="ts-val">8 × NV H200</span></div>
+        <div class="ts-row"><span class="ts-lbl">Densité rack</span><span class="ts-val">40–80 kW</span></div>
+      </div>
+      <div class="techno-detail">Moteur de la croissance +880 % au S1 2025/26.</div>
+    </div>
+
+    <div class="gpu-card">
+      <div class="gpu-header">
+        <div class="gpu-name">Atlas 1.8GG 1PIC</div>
+        <div class="gpu-arch">Immersion monophasique</div>
+        <span class="tag ta">Transition haute densité</span>
+      </div>
+      <div class="techno-stats">
+        <div class="ts-row"><span class="ts-lbl">Cooling</span><span class="ts-val">1-Phase immersion</span></div>
+        <div class="ts-row"><span class="ts-lbl">GPU max</span><span class="ts-val">8 × NV H200</span></div>
+        <div class="ts-row"><span class="ts-lbl">Densité rack</span><span class="ts-val">80–100 kW</span></div>
+      </div>
+    </div>
+
+    <div class="gpu-card gpu-card-hl">
+      <div class="gpu-header">
+        <div class="gpu-name" style="color:var(--green);">Atlas 1.8GG 2PIC</div>
+        <div class="gpu-arch">Immersion diphasique</div>
+        <span class="tag tg">Ultra-dense · premium · Rubin-ready</span>
+      </div>
+      <div class="techno-stats">
+        <div class="ts-row"><span class="ts-lbl">Cooling</span><span class="ts-val"><span class="tag tg">2-Phase</span></span></div>
+        <div class="ts-row"><span class="ts-lbl">GPU max</span><span class="ts-val">8 × NV H200 en 1U</span></div>
+        <div class="ts-row"><span class="ts-lbl">Densité rack</span><span class="ts-val" style="color:var(--green);font-weight:700;">&gt; 120 kW</span></div>
+      </div>
+      <div class="techno-detail" style="color:var(--t2);">Premier au monde en 1U diphasique. Fluide Opteon™ Chemours qualifié. Vendu depuis octobre 2024.</div>
+    </div>
+
   </div>
 
   <div class="callout ca" style="margin-top:8px;">
@@ -658,76 +695,95 @@
     <p>Chaque génération NVIDIA augmente le TDP par GPU. La progression est documentée et confirmée. <strong>Le diphasique n'est pas un choix esthétique</strong> — c'est une nécessité physique au-delà d'un certain seuil de densité thermique.</p>
   </div>
 
-  <div class="tbl-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Génération</th>
-          <th>Architecture</th>
-          <th>TDP / GPU</th>
-          <th>Mémoire HBM</th>
-          <th>Bande passante</th>
-          <th>Cooling requis</th>
-          <th>Disponibilité</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>H100</strong></td>
-          <td>Hopper</td>
-          <td>700 W</td>
-          <td>80 Go HBM2e</td>
-          <td>3,35 TB/s</td>
-          <td>DLC suffisant</td>
-          <td><span class="tag tg">Dispo</span></td>
-        </tr>
-        <tr>
-          <td><strong>H200</strong></td>
-          <td>Hopper Ultra</td>
-          <td>~1 000 W</td>
-          <td>141 Go HBM3e</td>
-          <td>4,8 TB/s</td>
-          <td>DLC — limite haute</td>
-          <td><span class="tag tg">Dispo</span></td>
-        </tr>
-        <tr>
-          <td><strong>B200</strong></td>
-          <td>Blackwell</td>
-          <td>~1 200 W</td>
-          <td>192 Go HBM3e</td>
-          <td>8 TB/s</td>
-          <td><span class="tag ta">Liquid obligatoire</span></td>
-          <td><span class="tag tg">Dispo</span><span class="sub">backlog ~3,6 M unités</span></td>
-        </tr>
-        <tr>
-          <td><strong>B300</strong></td>
-          <td>Blackwell Ultra</td>
-          <td>~1 400 W</td>
-          <td>288 Go HBM3e</td>
-          <td>8 TB/s</td>
-          <td><span class="tag ta">Liquid obligatoire</span></td>
-          <td><span class="tag tg">Dispo depuis H2 2025</span></td>
-        </tr>
-        <tr class="hl">
-          <td><strong>R100</strong></td>
-          <td>Vera Rubin</td>
-          <td>TDP en hausse vs B300</td>
-          <td>288 Go HBM4</td>
-          <td><strong>22 TB/s</strong></td>
-          <td><span class="tag tg">Diphasique idéal</span></td>
-          <td><span class="tag ta">Sampling Q4 2026<br>Vol. Q1 2027</span></td>
-        </tr>
-        <tr class="hl">
-          <td><strong>Rubin Ultra</strong></td>
-          <td>Vera Rubin Ultra</td>
-          <td>Très élevé</td>
-          <td>1 To HBM4e / GPU</td>
-          <td>&gt; 22 TB/s</td>
-          <td><span class="tag tg">Diphasique requis</span></td>
-          <td><span class="tag tr">H2 2027 · rack 600 kW</span></td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="gpu-grid">
+
+    <div class="gpu-card">
+      <div class="gpu-header">
+        <div class="gpu-name">H100</div>
+        <div class="gpu-arch">Hopper</div>
+        <span class="tag tg">Dispo</span>
+      </div>
+      <div class="techno-stats">
+        <div class="ts-row"><span class="ts-lbl">TDP / GPU</span><span class="ts-val">700 W</span></div>
+        <div class="ts-row"><span class="ts-lbl">Mémoire</span><span class="ts-val">80 Go HBM2e</span></div>
+        <div class="ts-row"><span class="ts-lbl">Bande passante</span><span class="ts-val">3,35 TB/s</span></div>
+        <div class="ts-row"><span class="ts-lbl">Cooling requis</span><span class="ts-val">DLC suffisant</span></div>
+      </div>
+    </div>
+
+    <div class="gpu-card">
+      <div class="gpu-header">
+        <div class="gpu-name">H200</div>
+        <div class="gpu-arch">Hopper Ultra</div>
+        <span class="tag tg">Dispo</span>
+      </div>
+      <div class="techno-stats">
+        <div class="ts-row"><span class="ts-lbl">TDP / GPU</span><span class="ts-val">~1 000 W</span></div>
+        <div class="ts-row"><span class="ts-lbl">Mémoire</span><span class="ts-val">141 Go HBM3e</span></div>
+        <div class="ts-row"><span class="ts-lbl">Bande passante</span><span class="ts-val">4,8 TB/s</span></div>
+        <div class="ts-row"><span class="ts-lbl">Cooling requis</span><span class="ts-val">DLC — limite haute</span></div>
+      </div>
+    </div>
+
+    <div class="gpu-card">
+      <div class="gpu-header">
+        <div class="gpu-name">B200</div>
+        <div class="gpu-arch">Blackwell</div>
+        <span class="tag tg">Dispo</span>
+      </div>
+      <div class="techno-stats">
+        <div class="ts-row"><span class="ts-lbl">TDP / GPU</span><span class="ts-val">~1 200 W</span></div>
+        <div class="ts-row"><span class="ts-lbl">Mémoire</span><span class="ts-val">192 Go HBM3e</span></div>
+        <div class="ts-row"><span class="ts-lbl">Bande passante</span><span class="ts-val">8 TB/s</span></div>
+        <div class="ts-row"><span class="ts-lbl">Cooling requis</span><span class="ts-val"><span class="tag ta">Liquid obligatoire</span></span></div>
+      </div>
+      <div class="techno-detail">Backlog estimé ~3,6 M unités — délais d'approvisionnement longs.</div>
+    </div>
+
+    <div class="gpu-card">
+      <div class="gpu-header">
+        <div class="gpu-name">B300</div>
+        <div class="gpu-arch">Blackwell Ultra</div>
+        <span class="tag tg">Dispo H2 2025</span>
+      </div>
+      <div class="techno-stats">
+        <div class="ts-row"><span class="ts-lbl">TDP / GPU</span><span class="ts-val">~1 400 W</span></div>
+        <div class="ts-row"><span class="ts-lbl">Mémoire</span><span class="ts-val">288 Go HBM3e</span></div>
+        <div class="ts-row"><span class="ts-lbl">Bande passante</span><span class="ts-val">8 TB/s</span></div>
+        <div class="ts-row"><span class="ts-lbl">Cooling requis</span><span class="ts-val"><span class="tag ta">Liquid obligatoire</span></span></div>
+      </div>
+    </div>
+
+    <div class="gpu-card gpu-card-hl">
+      <div class="gpu-header">
+        <div class="gpu-name" style="color:var(--green);">R100</div>
+        <div class="gpu-arch">Vera Rubin</div>
+        <span class="tag ta">Sampling Q4 2026 · Vol. Q1 2027</span>
+      </div>
+      <div class="techno-stats">
+        <div class="ts-row"><span class="ts-lbl">TDP / GPU</span><span class="ts-val">En hausse vs B300</span></div>
+        <div class="ts-row"><span class="ts-lbl">Mémoire</span><span class="ts-val">288 Go HBM4</span></div>
+        <div class="ts-row"><span class="ts-lbl">Bande passante</span><span class="ts-val" style="color:var(--green);font-weight:700;">22 TB/s (×4,6 vs H200)</span></div>
+        <div class="ts-row"><span class="ts-lbl">Cooling requis</span><span class="ts-val"><span class="tag tg">Diphasique idéal</span></span></div>
+      </div>
+      <div class="techno-detail" style="color:var(--t2);">Premier rack déjà opérationnel chez Microsoft Azure. Production volume Q1 2027.</div>
+    </div>
+
+    <div class="gpu-card gpu-card-hl">
+      <div class="gpu-header">
+        <div class="gpu-name" style="color:var(--green);">Rubin Ultra</div>
+        <div class="gpu-arch">Vera Rubin Ultra</div>
+        <span class="tag tr">H2 2027</span>
+      </div>
+      <div class="techno-stats">
+        <div class="ts-row"><span class="ts-lbl">TDP / GPU</span><span class="ts-val">Très élevé</span></div>
+        <div class="ts-row"><span class="ts-lbl">Mémoire</span><span class="ts-val">1 To HBM4e / GPU</span></div>
+        <div class="ts-row"><span class="ts-lbl">Rack "Kyber"</span><span class="ts-val" style="color:var(--red);font-weight:700;">600 kW · 576 GPU dies</span></div>
+        <div class="ts-row"><span class="ts-lbl">Cooling requis</span><span class="ts-val"><span class="tag tg">Diphasique requis</span></span></div>
+      </div>
+      <div class="techno-detail" style="color:var(--t2);">Confirmé par Jensen Huang à GTC 2026. Seul le diphasique viable à cette densité.</div>
+    </div>
+
   </div>
 
   <div class="callout" style="margin-top:8px;">
